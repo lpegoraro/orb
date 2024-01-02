@@ -251,6 +251,20 @@ agent_full:
 	  --tag=$(ORB_DOCKERHUB_REPO)/$(DOCKER_IMAGE_NAME_PREFIX)-agent-full:$(ORB_VERSION)-$(COMMIT_HASH) \
 	  -f agent/docker/Dockerfile.full .
 
+agent_full_custom_otel:
+	docker build --no-cache \
+	  --build-arg GOARCH=$(GOARCH) \
+	  --build-arg PKTVISOR_TAG=$(PKTVISOR_TAG) \
+	  --build-arg DIODE_TAG=$(DIODE_TAG) \
+	  --build-arg OTEL_DOCKER_REPO=lpegora/custom_otelcontribcol \
+	  --build-arg ORB_TAG=${REF_TAG} \
+	  --build-arg OTEL_TAG=develop \
+	  --build-arg OTELCONTRIB_ENTRYPOINT=/otelcontribcol \
+	  --tag=$(ORB_DOCKERHUB_REPO)/$(DOCKER_IMAGE_NAME_PREFIX)-agent-full-custom:$(REF_TAG) \
+	  --tag=$(ORB_DOCKERHUB_REPO)/$(DOCKER_IMAGE_NAME_PREFIX)-agent-full-custom:$(ORB_VERSION) \
+	  --tag=$(ORB_DOCKERHUB_REPO)/$(DOCKER_IMAGE_NAME_PREFIX)-agent-full-custom:$(ORB_VERSION)-$(COMMIT_HASH) \
+	  -f agent/docker/Dockerfile.full .
+
 agent_debug:
 	docker build \
 	  --build-arg PKTVISOR_TAG=$(PKTVISOR_DEBUG_TAG) \

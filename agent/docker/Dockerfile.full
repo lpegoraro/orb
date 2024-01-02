@@ -2,12 +2,14 @@ ARG ORB_TAG=develop
 ARG PKTVISOR_TAG=develop
 ARG DIODE_TAG=develop
 ARG OTEL_TAG=0.91.0
+ARG OTEL_DOCKER_REPO=otel/opentelemetry-collector-contrib
+ARG OTELCONTRIB_ENTRYPOINT=/usr/local/bin/otelcol-contrib
 
 FROM orbcommunity/orb-agent:${ORB_TAG} AS orb
 
 FROM orbcommunity/diode-agent:${DIODE_TAG} AS diode
 
-FROM otel/opentelemetry-collector-contrib:${OTEL_TAG} AS otelcol-contrib
+FROM ${OTEL_DOCKER_REPO}:${OTEL_TAG} AS otelcol-contrib
 
 FROM orbcommunity/pktvisor:${PKTVISOR_TAG}
 
@@ -24,7 +26,7 @@ COPY --from=diode /usr/local/bin/diode-agent /usr/local/bin/diode-agent
 # adding suzieq patched
 COPY --from=diode /root/.suzieq /root/.suzieq
 
-COPY --from=otelcol-contrib /otelcol-contrib /usr/local/bin/otelcol-contrib
+COPY --from=otelcol-contrib ${OTELCONTRIB_ENTRYPOINT} /usr/local/bin/otelcol-contrib
 
 RUN chmod a+x /run-agent.sh
 
